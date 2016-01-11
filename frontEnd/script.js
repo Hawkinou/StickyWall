@@ -13,44 +13,12 @@ var listPostIt;
 var listDisplayedPostIt;
 
 /**
- * WEB
- */
-
-var connectionWs = function () {
-    // if user is running mozilla then use it's built-in WebSocket
-    window.WebSocket = window.WebSocket || window.MozWebSocket;
-
-    var connection = new WebSocket('ws://127.0.0.1:8080');
-
-    connection.onopen = function () {
-        // connection is opened and ready to use
-    };
-
-    connection.onerror = function (error) {
-        // an error occurred when sending/receiving data
-    };
-
-    connection.onmessage = function (message) {
-        // try to decode json (I assume that each message from server is json)
-        try {
-            json = JSON.parse(message.data);
-            update();
-        } catch (e) {
-            console.log('This doesn\'t look like a valid JSON: ', message.data);
-            return;
-        }
-        // handle incoming message
-    };
-};
-
-/**
  * FCT
  */
 
 function resize(coo, axis) {
     "use strict";
-    console.log(coo*1+1);
-    return ((coo*1+1) * axis) / 2;
+    return ((coo * 1 + 1) * axis) / 2;
 }
 
 function editHand(r, l) {
@@ -58,10 +26,9 @@ function editHand(r, l) {
     var handR = document.getElementById("rightHand"),
         handL = document.getElementById("leftHand");
     handR.style.left = resize(r.x, winWidth);
-    handR.style.top = resize((r.y*-1), winHeigth);
+    handR.style.top = resize((r.y * -1), winHeigth);
     handL.style.left = resize(l.x, winWidth);
-    handL.style.top = resize((l.y*-1), winHeigth);
-    console.log(handL.style.top + " " + handL.style.left + " " + handL.style.top + " " + handL.style.left);
+    handL.style.top = resize((l.y * -1), winHeigth);
 }
 
 function addToNotif(p) {
@@ -137,6 +104,39 @@ function update() {
     editHand(json.rightHand, json.leftHand);
     
 }
+
+/**
+ * WEB
+ */
+
+var connectionWs = function () {
+    "use strict";
+    
+    // if user is running mozilla then use it's built-in WebSocket
+    window.WebSocket = window.WebSocket || window.MozWebSocket;
+
+    var connection = new WebSocket('ws://127.0.0.1:8080');
+
+    connection.onopen = function () {
+        // connection is opened and ready to use
+    };
+
+    connection.onerror = function (error) {
+        // an error occurred when sending/receiving data
+    };
+
+    connection.onmessage = function (message) {
+        // try to decode json (I assume that each message from server is json)
+        try {
+            json = JSON.parse(message.data);
+            update();
+        } catch (e) {
+            console.log('This doesn\'t look like a valid JSON: ', message.data);
+            return;
+        }
+        // handle incoming message
+    };
+};
 
 function start() {
     "use strict";
