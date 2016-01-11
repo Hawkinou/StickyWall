@@ -80,7 +80,7 @@ function validateImport() {
 
 function update() {
     "use strict";
-    /*
+    
     // ajout postIt 
     if (json.postIt.length > listPostIt.length){
         document.getElementById("notif").innerHTML = json.postIt.length - listPostIt.length;
@@ -98,7 +98,7 @@ function update() {
                 
             }
         }
-    }*/
+    }
     
     // mettre a jour les mains
     editHand(json.rightHand, json.leftHand);
