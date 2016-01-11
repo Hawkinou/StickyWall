@@ -1,0 +1,34 @@
+{
+	"rightHand" :{
+		"x" : 0.5,
+		"y" : 0.5
+	},
+	"leftHand" :{
+		"x" : 0.5,
+		"y" : 0.5
+	},
+	"postIt" :[
+		{
+		  "content" : "Post-it 1",
+		  "isOnWall" : true,
+		  "x" : 0.5,
+		  "y" : 0.5,
+		  "width":10,
+		  "height":10
+		},
+		{
+		"content" : "Post-it 2",
+		"x" : 0.1,
+		"y" : 0.5,
+		"width":10,
+		"height":10
+		},
+		{
+		"content" : "Post-it 3",
+		"x" : 0.4,
+		"y" : 0.5,
+		"width":10,
+		"height":10
+		}
+	]
+}

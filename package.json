@@ -1,0 +1,9 @@
+{
+    "name": "serveurStickyWall",
+    "version": "0.1.0",
+    "dependencies": {
+        "express": "~4.11.0"
+    },
+    "author": "Clément <clementaudry@gmail.com>",
+    "description": "Un gestionnaire de todolist ultra basique"
+}

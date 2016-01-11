@@ -1,0 +1,19 @@
+{
+	"rightHand" :{
+		"x" : 0.5,
+		"y" : 0.5
+	},
+	"leftHand" :{
+		"x" : 0.5,
+		"y" : 0.5
+	},
+	"postIt" :[
+	{
+		"content" : "Post-it 1",
+		"x" : 0.5,
+		"y" : 0.5,
+		"width":10,
+		"height":10
+		}
+	]
+}
