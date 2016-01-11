@@ -15,6 +15,11 @@ body{
     z-index: 1;
 }
 
+.selected{
+    box-shadow: 1px 1px 12px rgb(0, 80, 255);
+    border: 5px solid rgb(0, 80, 255);
+}
+
 .validate{
     color: white;
     background-color: rgb(0, 255, 70) !important;
