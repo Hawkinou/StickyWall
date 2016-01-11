@@ -6,6 +6,7 @@ var jsonObject = JSON.parse(textejson);
 var hand = true // Main droite = true Main gauche false
 var postItSelected;
 var connection;
+var inSelection=false;
 var server = http.createServer(function(req, res) {
 	var page = url.parse(req.url).pathname;
 	if (page=='/'){
@@ -103,8 +104,8 @@ var createPostIt = function(data) {
 	postIt.content=data;
 	postIt.x=0;
 	postIt.y=0;
-	postIt.width=0;
-	postIt.height=0;
+	postIt.width=-0.2;
+	postIt.height=0.2;
 	jsonObject.postIt.push(postIt)
 };
 server.listen(8080);
