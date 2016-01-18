@@ -60,8 +60,8 @@ function editHand(r, l) {
 
 function addToNotif(p) {
     "use strict";
-    document.getElementById("notif").innerHTML += 1;
     listPostIt.push(p);
+    document.getElementById("notif").innerHTML = listPostIt.length();
 }
 
 function openNotif() {
@@ -133,27 +133,20 @@ function destroyPostIt(p) {
 // update
 function update() {
     "use strict";
-
-    var isAPostItSelected=false;
+    
     for (e in json.postIt){
         // ajout postIt
         if (listPostIt.indexOf(json.postIt[e]) == -1){
             addToNotif(postIt[e]);
         }
-        if(json.postIt[e].isSelected == true){
-            if(postItSelected){
-                editPostIt(json.postIt[e]);
-            }
-            else{
-                selectPostIt(json.postIt[e]);
-            }
-            isAPostItSelected=true;
-        }
     }
-    if(postItSelected && !isAPostItSelected){
-        selectPostIt(postItSelected);
+    
+    // update postIt position
+    if(postItSelected){
+        editPostIt(postItSelected);
     }
-    // mettre a jour les mains
+    
+    // update hands position
     editHand(json.rightHand, json.leftHand);
     
 }
