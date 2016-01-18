@@ -8,12 +8,12 @@ var winHeigth = screen.height;
 
 var iconsPosition = {
     notif: {
-        x: winWidth - 10,
-        y: winHeigth - 10
+        x: winWidth - 60,
+        y: winHeigth - 60
     },
     trash: {
-        x: winWidth - 10,
-        y: 10
+        x: winWidth - 60,
+        y: 60
     }
 };
 
