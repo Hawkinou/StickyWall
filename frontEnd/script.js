@@ -22,8 +22,8 @@ var json;
 
 var postIt = null;
 var postItSelected = null;
-var listPostIt;
-var listDisplayedPostIt;
+var listPostIt = [];
+var listDisplayedPostIt = [];
 
 /**
  * FCT
@@ -132,6 +132,7 @@ function destroyPostIt(p) {
 // update
 function update() {
     "use strict";
+
     
     for (e in json.postIt){
         // ajout postIt 
@@ -139,7 +140,6 @@ function update() {
             addToNotif(postIt[e]);
         }
     }
-    
     // mettre a jour les mains
     editHand(json.rightHand, json.leftHand);
     
@@ -158,7 +158,7 @@ var connectionWs = function () {
     var connection = new WebSocket('ws://127.0.0.1:8080');
 
     connection.onopen = function () {
-        // connection is opened and ready to use
+        connection.sent()
     };
 
     connection.onerror = function (error) {
