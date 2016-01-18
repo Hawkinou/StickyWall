@@ -3,31 +3,44 @@
  */
 
 var e = null;
-var winHeigth = screen.height;
 var winWidth = screen.width;
+var winHeigth = screen.height;
 
-// convertir postion et envoyer au serveur
-//ou gérer moi même
-var notifPosition = {
-    x: winWidth - 10,
-    y: winHeigth - 10
-};
-    
-var trashPosition = {
-    x: winWidth - 10,
-    y: 10
+var iconsPosition = {
+    notif: {
+        x: winWidth - 10,
+        y: winHeigth - 10
+    },
+    trash: {
+        x: winWidth - 10,
+        y: 10
+    }
 };
 
 // tester si width et height sont plus grand...
 var json;
 
 var postIt = null;
+var postItSelected = null;
 var listPostIt;
 var listDisplayedPostIt;
 
 /**
  * FCT
  */
+
+function convert(coo, axis) {
+    "use strict";
+    return ((2 * coo) / axis) -1;
+}
+
+function getIconPosition(){
+    iconsPosition.notif.x = convert(iconsPosition.notif.x, winWidth);
+    iconsPosition.notif.y = convert(iconsPosition.notif.y, winHeigth);
+    iconsPosition.trash.x = convert(iconsPosition.trash.x, winWidth);
+    iconsPosition.trash.y = convert(iconsPosition.trash.y, winHeigth);
+    return iconsPosition;
+}
 
 function resize(coo, axis) {
     "use strict";
@@ -48,47 +61,6 @@ function addToNotif(p) {
     "use strict";
     document.getElementById("notif").innerHTML += 1;
     listPostIt.push(p);
-}
-
-function displayPostIt(p) {
-    "use strict";
-    postIt = document.createElement("div");
-    postIt.innerHTML = p.content;
-    postIt.setAttribute("id", p.id);
-    postIt.setAttribute("class", "postIt imported");
-    postIt.style.left = resize(p.x, winWidth);
-    postIt.style.top = resize(p.y, winHeigth);
-    // CAN I DO THAT ?
-    postIt.onclick = "selectPostIt(p)";
-    document.body.insertBefore(postIt, document.getElementById("buttons"));
-    listDisplayedPostIt.push(p);
-}
-
-// select a postIt to edit it
-function selectPostIt(p){
-    postIt = document.getElementById(p.id);
-    if(postIt.className.indexOf("selected") > -1){
-        postIt.classList.remove(postIt.className.indexOf("selected"));
-    } else {
-        postIt.className += " selected";
-    }
-}
-
-// edit a postIt position
-function editPostIt(p) {
-    "use strict";
-    postIt = document.getElementById(p.id);
-    postIt.innerHTML = p.content;
-    postIt.style.left = resize(p.x, winWidth);
-    postIt.style.top = resize(p.y, winHeigth);
-}
-
-// suppress a postIt
-function destroyPostIt(p) {
-    "use strict";
-    postIt = document.getElementById(p.id);
-    document.body.removeChild(postIt);
-    listDisplayedPostIt.splice(listDisplayedPostIt.indexOf(p), 1);
 }
 
 function openNotif() {
@@ -112,6 +84,49 @@ function validateImport() {
     for (e in listDisplayedPostIt){
         document.getElementById(listDisplayedPostIt[e].id).className = "postIt";
     }
+}
+
+function displayPostIt(p) {
+    "use strict";
+    postIt = document.createElement("div");
+    postIt.innerHTML = p.content;
+    postIt.setAttribute("id", p.id);
+    postIt.setAttribute("class", "postIt imported");
+    postIt.style.left = resize(p.x, winWidth);
+    postIt.style.top = resize(p.y, winHeigth);
+    // CAN I DO THAT ?
+    postIt.onclick = "selectPostIt(p)";
+    document.body.insertBefore(postIt, document.getElementById("buttons"));
+    listDisplayedPostIt.push(p);
+}
+
+// select a postIt to edit it
+function selectPostIt(p){
+    postIt = document.getElementById(p.id);
+    if(postIt.className.indexOf("selected") > -1){
+        postIt.classList.remove(postIt.className.indexOf("selected"));
+        postItSelected = null;
+    } else {
+        postIt.className += " selected";
+        postItSelected = p;
+    }
+}
+
+// edit a postIt position
+function editPostIt(p) {
+    "use strict";
+    postIt = document.getElementById(p.id);
+    postIt.innerHTML = p.content;
+    postIt.style.left = resize(p.x, winWidth);
+    postIt.style.top = resize(p.y, winHeigth);
+}
+
+// suppress a postIt
+function destroyPostIt(p) {
+    "use strict";
+    postIt = document.getElementById(p.id);
+    document.body.removeChild(postIt);
+    listDisplayedPostIt.splice(listDisplayedPostIt.indexOf(p), 1);
 }
 
 // update
