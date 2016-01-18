@@ -3,10 +3,10 @@ var webSocketServer = require('websocket').server;
 var url = require('url');
 var textejson='{"rightHand" :{"x" : 1,"y" : 1},"leftHand" :{"x" : -1,"y" : -1},"postIt" :[]}';
 var jsonObject = JSON.parse(textejson);
-var hand = true // Main droite = true Main gauche false
-var postItSelected;
-var connection;
-var inSelection=false;
+var hand = true; // Main droite = true Main gauche false
+var postItSelected; //Numero du PostIt selectionné
+var connection; // Si on est connecté en WS avec un client
+var inSelection=false; //Si on est dans l'état selectionné
 var server = http.createServer(function(req, res) {
 	var page = url.parse(req.url).pathname;
 	if (page=='/'){
@@ -49,9 +49,9 @@ var server = http.createServer(function(req, res) {
 			connection.sendUTF(JSON.stringify( jsonObject ));
 		console.log(JSON.stringify( jsonObject ));
 		res.end();
-
 	}
 });
+
 var wsServer = new webSocketServer({
 	// WebSocket server is tied to a HTTP server. WebSocket request is just
 	// an enhanced HTTP request. For more info http://tools.ietf.org/html/rfc6455#page-6
@@ -87,9 +87,8 @@ var getSelectedPostIt= function(handValue){
 		jsonObject.postIt.forEach(coord);
 	}
 	else{
-
 	}
-}
+};
 var getHandPosition = function(url) {
 	var listCoord=url.split("/");
 	var handValue=[];
@@ -102,9 +101,9 @@ var getHandPosition = function(url) {
 var createPostIt = function(data) {
 	var postIt={};
 	postIt.content=data;
-	postIt.x=0;
-	postIt.y=0;
-	postIt.width=-0.2;
+	postIt.x=Math.random()-0.5;
+	postIt.y=Math.random()-0.5;
+	postIt.width=0.2;
 	postIt.height=0.2;
 	jsonObject.postIt.push(postIt)
 };

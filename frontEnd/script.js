@@ -9,8 +9,8 @@ var winWidth = screen.width;
 var json;
 
 var postIt = null;
-var listPostIt;
-var listDisplayedPostIt;
+var listPostIt=[];
+var listDisplayedPostIt=[];
 
 /**
  * FCT
@@ -80,7 +80,8 @@ function validateImport() {
 
 function update() {
     "use strict";
-    
+    console.log(json);
+    debugger;
     // ajout postIt 
     if (json.postIt.length > listPostIt.length){
         document.getElementById("notif").innerHTML = json.postIt.length - listPostIt.length;
@@ -99,7 +100,6 @@ function update() {
             }
         }
     }
-    
     // mettre a jour les mains
     editHand(json.rightHand, json.leftHand);
     
@@ -118,7 +118,7 @@ var connectionWs = function () {
     var connection = new WebSocket('ws://127.0.0.1:8080');
 
     connection.onopen = function () {
-        // connection is opened and ready to use
+        connection.sent()
     };
 
     connection.onerror = function (error) {
