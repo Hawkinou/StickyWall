@@ -73,7 +73,9 @@ wsServer.on('request', function(request) {
 		console.log((new Date()) + " Peer "
 		+ connection.remoteAddress + " disconnected.");
 	});
-
+	connection.on('message', function(message) {
+		console.log(message);
+	});
 });
 var getSelectedPostIt= function(handValue){
 	if(hand){
@@ -98,6 +100,7 @@ var getHandPosition = function(url) {
 	listCoord.forEach(coord);
 	return handValue;
 };
+
 var createPostIt = function(data) {
 	var postIt={};
 	postIt.content=data;

@@ -4,6 +4,8 @@ body{
 
 .postIt{
     z-index: -1;
+    min-height: 50px;
+    min-width: 50px;
     position: absolute;
     padding: 25px;
     box-shadow: 1px 1px 12px #555;
@@ -18,11 +20,6 @@ body{
 .selected{
     box-shadow: 1px 1px 12px rgb(0, 80, 255);
     border: 5px solid rgb(0, 80, 255);
-}
-
-.validate{
-    color: white;
-    background-color: rgb(0, 255, 70) !important;
 }
 
 .hand{
@@ -41,15 +38,7 @@ body{
     width: 50px;
 }
 
-#importZone{
-    display: none;
-    height: 100%;
-    width: 100%;
-    background-color: rgba(24, 42, 255, 0.6);    
-}
-
-#notif{
-    display: flex;
+.btn-rcircle{
     bottom: 10px;
     right: 10px;
     border-radius: 80px;
@@ -57,12 +46,23 @@ body{
     align-items: center;
     font-weight: bold;
     color: white;
-    background-color: rgb(255, 0, 0);
 }
 
-#editButton{
-    top: 10px;
-    right: 10px;
+#importZone{
+    display: none;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(24, 42, 255, 0.6);    
+}
+
+#validate{
+    display: none;
+    background-color: rgb(0, 255, 70);
+}
+
+#notif{
+    display: flex;
+    background-color: rgb(255, 0, 0);
 }
 
 #trashButton{
