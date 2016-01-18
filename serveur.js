@@ -35,10 +35,12 @@ var server = http.createServer(function(req, res) {
 		}
 		if (Math.abs(handValue[1]*1-handValue[3]*1)<0.15&&Math.abs(handValue[2]*1-handValue[4]*1)<0.15&&inSelection){
 			if (postItSelected){
+				jsonObject.postIt[postItSelected].isSelected=false;
 				postItSelected=undefined;
 			}
 			else {
 				getSelectedPostIt(handValue);
+				jsonObject.postIt[postItSelected].isSelected=true;
 			}
 			inSelection=true;
 		}
@@ -66,7 +68,7 @@ wsServer.on('request', function(request) {
 	connection = request.accept(null, request.origin);
 	console.log((new Date()) + ' Connection accepted.');
 	connection.sendUTF(JSON.stringify( jsonObject ));
-
+	createPostIt("Numero uno");
 
 	// user disconnected
 	connection.on('close', function(connection) {
@@ -74,7 +76,7 @@ wsServer.on('request', function(request) {
 		+ connection.remoteAddress + " disconnected.");
 	});
 	connection.on('message', function(message) {
-		console.log(message);
+		//console.log(message.utf8Data.trash.x);
 	});
 });
 var getSelectedPostIt= function(handValue){
@@ -108,6 +110,7 @@ var createPostIt = function(data) {
 	postIt.y=Math.random()-0.5;
 	postIt.width=0.2;
 	postIt.height=0.2;
+	postIt.isSelected=false;
 	jsonObject.postIt.push(postIt)
 };
 server.listen(8080);

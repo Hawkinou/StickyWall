@@ -39,7 +39,8 @@ function getIconPosition(){
     iconsPosition.notif.y = convert(iconsPosition.notif.y, winHeigth);
     iconsPosition.trash.x = convert(iconsPosition.trash.x, winWidth);
     iconsPosition.trash.y = convert(iconsPosition.trash.y, winHeigth);
-    return iconsPosition;
+    console.log(iconsPosition);
+    return JSON.stringify(iconsPosition);
 }
 
 function resize(coo, axis) {
@@ -133,12 +134,24 @@ function destroyPostIt(p) {
 function update() {
     "use strict";
 
-    
+    var isAPostItSelected=false;
     for (e in json.postIt){
-        // ajout postIt 
+        // ajout postIt
         if (listPostIt.indexOf(json.postIt[e]) == -1){
             addToNotif(postIt[e]);
         }
+        if(json.postIt[e].isSelected == true){
+            if(postItSelected){
+                editPostIt(json.postIt[e]);
+            }
+            else{
+                selectPostIt(json.postIt[e]);
+            }
+            isAPostItSelected=true;
+        }
+    }
+    if(postItSelected && !isAPostItSelected){
+        selectPostIt(postItSelected);
     }
     // mettre a jour les mains
     editHand(json.rightHand, json.leftHand);
@@ -158,7 +171,7 @@ var connectionWs = function () {
     var connection = new WebSocket('ws://127.0.0.1:8080');
 
     connection.onopen = function () {
-        connection.sent()
+        connection.send(getIconPosition());
     };
 
     connection.onerror = function (error) {
@@ -180,6 +193,5 @@ var connectionWs = function () {
 
 function start() {
     "use strict";
-    //connectionWs();
-    update();
+    connectionWs();
 }
