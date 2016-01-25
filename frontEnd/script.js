@@ -5,7 +5,7 @@
 var e = null;
 var winWidth = screen.width;
 var winHeigth = screen.height;
-
+var notifOpened=false;
 var iconsPosition = {
     notif: {
         x: winWidth - 60,
@@ -60,20 +60,28 @@ function editHand(r, l) {
 
 function addToNotif(p) {
     "use strict";
-    document.getElementById("notif").innerHTML += 1;
     listPostIt.push(p);
+    document.getElementById("notif").innerHTML = listPostIt.length;
 }
 
 function openNotif() {
     "use strict";
-    document.getElementById("importZone").style.display = "block";
-    document.getElementById("notif").style.display = "none";
-    document.getElementById("validate").style.display = "flex";
-    for (e in listPostIt){
-        displayPostIt(listPostIt[e]);
+    if (!notifOpened) {
+        document.getElementById("importZone").style.display = "block";
+        document.getElementById("notif").style.display = "none";
+        document.getElementById("validate").style.display = "flex";
+        for (e in listPostIt) {
+            displayPostIt(listPostIt[e]);
+        }
+        document.getElementById("notif").innerHTML = 0;
+        listPostIt = [];
+        notifOpened=true;
+
     }
-    document.getElementById("notif").innerHTML = 0;
-    listPostIt = [];
+    else{
+        notifOpened=false;
+        validateImport();
+    }
 }
 
 // validate the import
@@ -94,7 +102,7 @@ function displayPostIt(p) {
     postIt.setAttribute("id", p.id);
     postIt.setAttribute("class", "postIt imported");
     postIt.style.left = resize(p.x, winWidth);
-    postIt.style.top = resize(p.y, winHeigth);
+    postIt.style.top = resize(p.y*-1, winHeigth);
     // CAN I DO THAT ?
     postIt.onclick = "selectPostIt(p)";
     document.body.insertBefore(postIt, document.getElementById("buttons"));
@@ -105,7 +113,9 @@ function displayPostIt(p) {
 function selectPostIt(p){
     postIt = document.getElementById(p.id);
     if(postIt.className.indexOf("selected") > -1){
-        postIt.classList.remove(postIt.className.indexOf("selected"));
+        console.log(postIt.classList);
+        postIt.classList.remove("selected");
+        console.log(postIt.classList);
         postItSelected = null;
     } else {
         postIt.className += " selected";
@@ -119,7 +129,8 @@ function editPostIt(p) {
     postIt = document.getElementById(p.id);
     postIt.innerHTML = p.content;
     postIt.style.left = resize(p.x, winWidth);
-    postIt.style.top = resize(p.y, winHeigth);
+    postIt.style.top = resize(p.y*-1, winHeigth);
+
 }
 
 // suppress a postIt
@@ -133,12 +144,14 @@ function destroyPostIt(p) {
 // update
 function update() {
     "use strict";
+    // mettre a jour les mains
+    editHand(json.rightHand, json.leftHand);
 
-    var isAPostItSelected=false;
+    var isAPostItSelected = false;
     for (e in json.postIt){
         // ajout postIt
-        if (listPostIt.indexOf(json.postIt[e]) == -1){
-            addToNotif(postIt[e]);
+        if (listPostIt.length+listDisplayedPostIt.length<=e){
+            addToNotif(json.postIt[e]);
         }
         if(json.postIt[e].isSelected == true){
             if(postItSelected){
@@ -147,15 +160,16 @@ function update() {
             else{
                 selectPostIt(json.postIt[e]);
             }
-            isAPostItSelected=true;
+            isAPostItSelected = true;
         }
     }
     if(postItSelected && !isAPostItSelected){
+        console.log("desselecitonné");
         selectPostIt(postItSelected);
     }
-    // mettre a jour les mains
-    editHand(json.rightHand, json.leftHand);
-    
+    if(json.notif){
+        openNotif()
+    }
 }
 
 /**
@@ -171,7 +185,7 @@ var connectionWs = function () {
     var connection = new WebSocket('ws://127.0.0.1:8080');
 
     connection.onopen = function () {
-        connection.send(getIconPosition());
+        connection.send(JSON.stringify(getIconPosition()));
     };
 
     connection.onerror = function (error) {
@@ -182,11 +196,11 @@ var connectionWs = function () {
         // try to decode json (I assume that each message from server is json)
         try {
             json = JSON.parse(message.data);
-            update();
         } catch (e) {
             console.log('This doesn\'t look like a valid JSON: ', message.data);
             return;
         }
+        update();
         // handle incoming message
     };
 };

@@ -23,7 +23,7 @@ body{
 }
 
 .hand{
-    z-index: 1;
+    z-index: 2;
     position: absolute;
     height: 100px;
     width: 100px;

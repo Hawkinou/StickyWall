@@ -4,9 +4,12 @@ var url = require('url');
 var textejson='{"rightHand" :{"x" : 1,"y" : 1},"leftHand" :{"x" : -1,"y" : -1},"postIt" :[]}';
 var jsonObject = JSON.parse(textejson);
 var hand = true; // Main droite = true Main gauche false
-var postItSelected; //Numero du PostIt selectionné
+var postItSelected=-1; //Numero du PostIt selectionné
 var connection; // Si on est connecté en WS avec un client
 var inSelection=false; //Si on est dans l'état selectionné
+var idNumber=-1;
+var notif={};
+var trash={};
 var server = http.createServer(function(req, res) {
 	var page = url.parse(req.url).pathname;
 	if (page=='/'){
@@ -29,27 +32,35 @@ var server = http.createServer(function(req, res) {
 		jsonObject.rightHand.y=handValue[2];
 		jsonObject.leftHand.x=handValue[3];
 		jsonObject.leftHand.y=handValue[4];
-		if (postItSelected){
+		if (postItSelected>-1){
 			jsonObject.postIt[postItSelected].x=handValue[1];
 			jsonObject.postIt[postItSelected].y=handValue[2];
 		}
-		if (Math.abs(handValue[1]*1-handValue[3]*1)<0.15&&Math.abs(handValue[2]*1-handValue[4]*1)<0.15&&inSelection){
-			if (postItSelected){
+		if (Math.abs(handValue[1]*1-handValue[3]*1)<=0.15&&Math.abs(handValue[2]*1-handValue[4]*1)<=0.15){
+			if (inSelection){
+
+			}
+			else if (postItSelected!=-1){
 				jsonObject.postIt[postItSelected].isSelected=false;
-				postItSelected=undefined;
+				postItSelected=-1;
 			}
 			else {
-				getSelectedPostIt(handValue);
-				jsonObject.postIt[postItSelected].isSelected=true;
+				if (getSelectedPostIt(handValue));
+				else{
+					isNotifSelected(handValue);
+				}
+				if (postItSelected!=-1)
+					inSelection=true;
 			}
-			inSelection=true;
 		}
 		else{
 			inSelection=false;
 		}
-		if (connection)
-			connection.sendUTF(JSON.stringify( jsonObject ));
-		console.log(JSON.stringify( jsonObject ));
+
+		if (connection) {
+			jsonObject.notif = false;
+			connection.sendUTF(JSON.stringify(jsonObject));
+		}
 		res.end();
 	}
 });
@@ -68,7 +79,6 @@ wsServer.on('request', function(request) {
 	connection = request.accept(null, request.origin);
 	console.log((new Date()) + ' Connection accepted.');
 	connection.sendUTF(JSON.stringify( jsonObject ));
-	createPostIt("Numero uno");
 
 	// user disconnected
 	connection.on('close', function(connection) {
@@ -76,19 +86,32 @@ wsServer.on('request', function(request) {
 		+ connection.remoteAddress + " disconnected.");
 	});
 	connection.on('message', function(message) {
-		//console.log(message.utf8Data.trash.x);
+		var info2 = message.utf8Data.replace(/\\/g, '');
+		console.log(info2.substring(1,info2.length-1));
+
+		var info = JSON.parse(info2.substring(1,info2.length-1));
+		console.log(info);
+		notif.x=info.notif.x;
+		trash.x=info.trash.x;
+		notif.y=info.notif.y;
+		trash.y=info.trash.y;
+
 	});
 });
 var getSelectedPostIt= function(handValue){
 	if(hand){
 		function coord(element, index, array) {
-			if (handValue[1]>element.x&&handValue[1]<element.x+element.width){
-				if (handValue[2]>element.y&&handValue[2]<element.y+element.height){
+			if (handValue[1]>=element.x-0.1&&handValue[1]<=element.x*1+element.width*1){
+				if ((handValue[2]*-1>=element.y-0.1&&handValue[2]*-1<=element.y*1+element.height*1)||(handValue[2]>=element.y-0.1&&handValue[2]<element.y*1+element.height*1)){
 					postItSelected=index;
+					jsonObject.postIt[postItSelected].isSelected=true;
+					console.log("PostItSelected");
+					return true;
 				}
 			}
 		}
 		jsonObject.postIt.forEach(coord);
+		return false;
 	}
 	else{
 	}
@@ -102,8 +125,20 @@ var getHandPosition = function(url) {
 	listCoord.forEach(coord);
 	return handValue;
 };
-
+var isNotifSelected = function(handValue){
+	if (notif.x) {
+		if (handValue[1] >= notif.x) {
+			if (handValue[2] * -1 >= notif.y) {
+				console.log("Notif");
+				jsonObject.notif = true;
+				connection.sendUTF(JSON.stringify(jsonObject));
+				inSelection=true;
+			}
+		}
+	}
+};
 var createPostIt = function(data) {
+	idNumber++;
 	var postIt={};
 	postIt.content=data;
 	postIt.x=Math.random()-0.5;
@@ -111,6 +146,7 @@ var createPostIt = function(data) {
 	postIt.width=0.2;
 	postIt.height=0.2;
 	postIt.isSelected=false;
+	postIt.id=idNumber;
 	jsonObject.postIt.push(postIt)
 };
 server.listen(8080);
