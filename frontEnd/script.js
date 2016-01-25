@@ -62,6 +62,7 @@ function addToNotif(p) {
     "use strict";
     listPostIt.push(p);
     document.getElementById("notif").innerHTML = listPostIt.length;
+
 }
 
 function openNotif() {
@@ -148,6 +149,7 @@ function update() {
     editHand(json.rightHand, json.leftHand);
 
     var isAPostItSelected = false;
+
     for (e in json.postIt){
         // ajout postIt
         if (listPostIt.length+listDisplayedPostIt.length<=e){
@@ -170,6 +172,9 @@ function update() {
     if(json.notif){
         openNotif()
     }
+    
+    
+
 }
 
 /**
