@@ -43,6 +43,7 @@ var server = http.createServer(function(req, res) {
 			else if (postItSelected!=-1){
 				jsonObject.postIt[postItSelected].isSelected=false;
 				postItSelected=-1;
+				inSelection=true;
 			}
 			else {
 				if (getSelectedPostIt(handValue));
@@ -129,7 +130,6 @@ var isNotifSelected = function(handValue){
 	if (notif.x) {
 		if (handValue[1] >= notif.x) {
 			if (handValue[2] * -1 >= notif.y) {
-				console.log("Notif");
 				jsonObject.notif = true;
 				connection.sendUTF(JSON.stringify(jsonObject));
 				inSelection=true;

@@ -8,12 +8,12 @@ var winHeigth = screen.height;
 var notifOpened=false;
 var iconsPosition = {
     notif: {
-        x: winWidth - 60,
-        y: winHeigth - 60
+        x: winWidth - 110,
+        y: winHeigth - 110
     },
     trash: {
-        x: winWidth - 60,
-        y: 60
+        x: winWidth - 110,
+        y: 110
     }
 };
 
@@ -114,9 +114,7 @@ function displayPostIt(p) {
 function selectPostIt(p){
     postIt = document.getElementById(p.id);
     if(postIt.className.indexOf("selected") > -1){
-        console.log(postIt.classList);
         postIt.classList.remove("selected");
-        console.log(postIt.classList);
         postItSelected = null;
     } else {
         postIt.className += " selected";
