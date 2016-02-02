@@ -93,6 +93,7 @@ function validateImport() {
     document.getElementById("validate").style.display = "none";
     for (e in listDisplayedPostIt){
         document.getElementById(listDisplayedPostIt[e].id).className = "postIt";
+        document.getElementById(listDisplayedPostIt[e].id).style.backgroundColor = e.color;
     }
 }
 
@@ -170,7 +171,7 @@ function update() {
     if(json.notif){
         openNotif()
     }
-    
+
     
 
 }

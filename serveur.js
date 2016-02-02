@@ -28,6 +28,8 @@ var server = http.createServer(function(req, res) {
 	else if(page=='/favicon.ico');
 	else{
 		var handValue=getHandPosition(page);
+		console.log(page);
+		console.log(handValue[1]+"/"+handValue[2]+"/"+handValue[3]+"/"+handValue[4]);
 		jsonObject.rightHand.x=handValue[1];
 		jsonObject.rightHand.y=handValue[2];
 		jsonObject.leftHand.x=handValue[3];
@@ -121,7 +123,7 @@ var getHandPosition = function(url) {
 	var listCoord=url.split("/");
 	var handValue=[];
 	function coord(element, index, array) {
-		handValue[index]=element.replace(",",".");
+		handValue[index]=smooth(element.replace(",","."));
 	}
 	listCoord.forEach(coord);
 	return handValue;
@@ -147,6 +149,16 @@ var createPostIt = function(data) {
 	postIt.height=0.2;
 	postIt.isSelected=false;
 	postIt.id=idNumber;
+	postIt.color="coral";
 	jsonObject.postIt.push(postIt)
 };
+var smooth = function(x){
+	if (x<-0.6){
+		return 2*x+0.6;
+	}
+	else if (x>0.6){
+		return 2*x-0.6;
+	}
+	return x;
+}
 server.listen(8080);
